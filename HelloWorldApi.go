@@ -20,7 +20,7 @@ func main() {
 func initializeHandlers(router *mux.Router) {
 	router.HandleFunc("/players", GetPlayers).Methods("GET")
 	router.HandleFunc("/player/{id}", GetPlayer).Methods("GET")
-	router.HandleFunc("/player/{id}", CreatePlayer).Methods("CREATE")
+	router.HandleFunc("/player/{id}", CreatePlayer).Methods("POST")
 	router.HandleFunc("/player/{id}", DeletePlayer).Methods("DELETE")
 }
 func GetPlayer(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +33,16 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(Players.Players)
 }
+
 func CreatePlayer(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	var player Models.Player
+	json.NewDecoder(r.Body).Decode(&player)
+	id, _ := strconv.Atoi(params["id"])
+	player.Id = id
+	Players.AddPlayer(player)
+
+	json.NewEncoder(w).Encode(player)
 
 }
 func DeletePlayer(w http.ResponseWriter, r *http.Request) {

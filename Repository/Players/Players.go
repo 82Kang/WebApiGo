@@ -20,3 +20,15 @@ func GetPlayer(id int) Models.Player {
 	}
 	return Models.Player{}
 }
+
+func DeletePlayer(id int) []Models.Player {
+
+	for index, player := range Players {
+
+		if player.Id == id {
+			Players = append(Players[:index], Players[index+1:]...)
+			break
+		}
+	}
+	return Players
+}
